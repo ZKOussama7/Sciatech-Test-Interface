@@ -1,0 +1,104 @@
+<div class="hdr">
+  MQTT DashBoard For SCIA-TECH MQTT Communication
+  <div>
+    <button class="hdr-button" [style]="{'background-color':tab==0?'#555':'#000'}" (click)="set_tab(0)" >Chat</button>
+    <button class="hdr-button" [style]="{'background-color':tab==1?'#555':'#000'}" (click)="set_tab(1)" >3D</button>
+    <button class="hdr-button" [style]="{'background-color':tab==2?'#555':'#000'}" (click)="set_tab(2)" >PMap</button>
+  </div>
+</div>
+
+<!-- Messaging Mqtt App -->
+<div class="bdy"  *ngIf="tab==0">
+  <div #scrollMe class="lst">
+    <div *ngFor="let item of list" class="block">
+        <div *ngIf="item.user!=Name" [style]="{'float':'left'}" class="user">{{item.user}}</div>
+        <div [style]="{'background-color':item.user==Name?'#1F3C41':'#1F4135','float':item.user==Name?'right':'left'}" class="msg">{{item.msg}}</div>
+    </div>
+    <div class="block">
+    </div>
+    
+    <div class="send-box">
+      <div class="input-box">
+        <input autofocus tabindex="2" [(ngModel)]="text" (keyup.enter)="sendit()" type="text" class="chat-input" placeholder="Enter your message here">
+      </div>
+      <button tabindex="3" (click)="sendit()" class="send-btn">Send</button>
+    </div>
+    
+    <div class="name-box">
+      <div class="input-box" [style]="{'background-color':'transparent'}">
+        <input [style]="{'color':name==Name?'whitesmoke':'rgb(175, 75, 75)'}" tabindex="1" [(ngModel)]="name" (keyup.enter)="changeit()" type="text" class="chat-input" placeholder="Name => Enter">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3D Visualization -->
+<div class="bdy"  *ngIf="tab==1">
+  <div class="d3canvas">
+    <canvas #thecanvas id="thecanvas" [style]="{height:'100%',width:'100%'}"></canvas>
+  </div> 
+</div>
+
+<div class="bdy"  *ngIf="tab==2">
+  <div class="d3canvas">
+    Pressure Map 
+    <!-- {{timestamp}} -->
+  </div> 
+</div>
+
+<div *ngIf="tab==0">
+  <div class="MPU">
+    <div>R_MPU</div>
+    <div class="data"><div>Sx: </div><div>{{formatnum(Rmpudata.Sx,4,2)}}</div></div>
+    <div class="data"><div>Sy: </div><div>{{formatnum(Rmpudata.Sy,4,2)}}</div></div>
+    <div class="data"><div>Sz: </div><div>{{formatnum(Rmpudata.Sz,4,2)}}</div></div>
+    <div class="data"><div>Qx: </div><div>{{formatnum(Rmpudata.Qx,4,2)}}</div></div>
+    <div class="data"><div>Qy: </div><div>{{formatnum(Rmpudata.Qy,4,2)}}</div></div>
+    <div class="data"><div>Qz: </div><div>{{formatnum(Rmpudata.Qz,4,2)}}</div></div>
+    <div class="data"><div>Qw: </div><div>{{formatnum(Rmpudata.Qw,4,2)}}</div></div>
+    <div class="data"><div (click)="countthem()">FPS: </div><div *ngIf="!count">{{counts}}</div></div>
+  </div>
+  
+  <div class="PRS">
+    <div>R_PRESSURE</div>
+    <div *ngFor="let dt of Rprsdata; let i = index" class="data"><div>P{{i}}: </div><div>{{formatnum((3.3)*dt/4095,4,1)}}</div></div>
+  </div>
+</div>
+
+<div *ngIf="tab==1">
+  <div class="MPU">
+    <div (click)="rol=true">R_MPU</div>
+    <div class="data"><div>Sx: </div><div>{{formatnum(Rmpudata.Sx,4,2)}}</div></div>
+    <div class="data"><div>Sy: </div><div>{{formatnum(Rmpudata.Sy,4,2)}}</div></div>
+    <div class="data"><div>Sz: </div><div>{{formatnum(Rmpudata.Sz,4,2)}}</div></div>
+    <div class="data"><div>Qx: </div><div>{{formatnum(Rmpudata.Qx,4,2)}}</div></div>
+    <div class="data"><div>Qy: </div><div>{{formatnum(Rmpudata.Qy,4,2)}}</div></div>
+    <div class="data"><div>Qz: </div><div>{{formatnum(Rmpudata.Qz,4,2)}}</div></div>
+    <div class="data"><div>Qw: </div><div>{{formatnum(Rmpudata.Qw,4,2)}}</div></div>
+    <div class="data"><div (click)="countthem()">FPS: </div><div *ngIf="!count">{{counts}}</div></div>
+  </div>
+  
+  <div class="PRS">
+    <div (click)="rol=false">L_MPU</div>
+    <div class="data"><div>Sx: </div><div>{{formatnum(Lmpudata.Sx,4,2)}}</div></div>
+    <div class="data"><div>Sy: </div><div>{{formatnum(Lmpudata.Sy,4,2)}}</div></div>
+    <div class="data"><div>Sz: </div><div>{{formatnum(Lmpudata.Sz,4,2)}}</div></div>
+    <div class="data"><div>Qx: </div><div>{{formatnum(Lmpudata.Qx,4,2)}}</div></div>
+    <div class="data"><div>Qy: </div><div>{{formatnum(Lmpudata.Qy,4,2)}}</div></div>
+    <div class="data"><div>Qz: </div><div>{{formatnum(Lmpudata.Qz,4,2)}}</div></div>
+    <div class="data"><div>Qw: </div><div>{{formatnum(Lmpudata.Qw,4,2)}}</div></div>
+  </div>
+</div>
+
+<div *ngIf="tab==2">
+  <div class="MPU">
+    <div>R_PRESSURE</div>
+    <div *ngFor="let dt of Rprsdata; let i = index" class="data"><div>P{{i}}: </div><div>{{formatnum((3.3)*dt/4095,4,1)}}</div></div>
+  </div>
+  
+  <div class="PRS">
+    <div>L_PRESSURE</div>
+    <div *ngFor="let dt of Lprsdata; let i = index" class="data"><div>P{{i}}: </div><div>{{formatnum((3.3)*dt/4095,4,1)}}</div></div>
+  </div>
+</div>
+
