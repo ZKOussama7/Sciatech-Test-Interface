@@ -42,7 +42,8 @@
 <div class="bdy"  *ngIf="tab==2">
   <div class="d3canvas">
     Pressure Map 
-    <!-- {{timestamp}} -->
+    <!-- // TODO: for every point , for every pixel calculate the didtance and multiply it by its strength then add it to the bw value of the pixel; -->
+    <canvas #prscanvas id="prscanvas"></canvas>
   </div> 
 </div>
 

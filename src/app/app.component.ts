@@ -55,79 +55,125 @@ export class AppComponent implements OnDestroy, AfterViewInit {
   counts: number = 0;
   @ViewChild('scrollMe') private myScrollContainer!: ElementRef;
   @ViewChild('thecanvas') private myCanvas!: ElementRef;
+  @ViewChild('prscanvas') private prscanvas!: ElementRef;
   camera!: THREE.PerspectiveCamera;
   get canvas(): HTMLCanvasElement {
     return this.myCanvas.nativeElement;
+  }
+
+  get pcanvas(): HTMLCanvasElement {
+    return this.prscanvas.nativeElement;
   }
 
   renderer!: THREE.WebGLRenderer;
   scene!: THREE.Scene;
 
   async ngAfterViewInit() {
-    this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x404040);
+    
+    if(this.tab==1){
+      this.scene = new THREE.Scene();
+      this.scene.background = new THREE.Color(0x404040);
 
-    let somila: THREE.Group<THREE.Object3DEventMap> = await new Promise<
-      THREE.Group<THREE.Object3DEventMap>
-    >((resolve, reject) => {
-      this.scene;
-      let loader = new GLTFLoader();
+      let somila: THREE.Group<THREE.Object3DEventMap> = await new Promise<
+        THREE.Group<THREE.Object3DEventMap>
+      >((resolve, reject) => {
+        this.scene;
+        let loader = new GLTFLoader();
 
-      loader.load(
-        'assets/somila.glb',
-        function (gltf) {
-          console.log('loaded');
-          resolve(gltf.scene);
-        },
-        undefined,
-        function (error) {
-          console.error(error);
-          reject(error);
-        }
-      );
-    });
-    let plight = new THREE.PointLight(0xffffff, 100, 0, 1);
-    plight.position.set(50, -50, 50);
-    this.scene.add(plight);
-    let ambientLight = new THREE.AmbientLight(0x999999);
-    this.scene.add(ambientLight);
+        loader.load(
+          'assets/somila.glb',
+          function (gltf) {
+            console.log('loaded');
+            resolve(gltf.scene);
+          },
+          undefined,
+          function (error) {
+            console.error(error);
+            reject(error);
+          }
+        );
+      });
+      let plight = new THREE.PointLight(0xffffff, 100, 0, 1);
+      plight.position.set(50, -50, 50);
+      this.scene.add(plight);
+      let ambientLight = new THREE.AmbientLight(0x999999);
+      this.scene.add(ambientLight);
 
-    let box = new THREE.Box3().setFromObject(somila);
-    let trnvec = new THREE.Vector3();
-    trnvec = box.getCenter(trnvec);
-    console.log(trnvec);
-    somila.scale.set(0.02, 0.02, 0.02);
-    // this.camera.quaternion.copy(somila.quaternion);
+      let box = new THREE.Box3().setFromObject(somila);
+      let trnvec = new THREE.Vector3();
+      trnvec = box.getCenter(trnvec);
+      console.log(trnvec);
+      somila.scale.set(0.02, 0.02, 0.02);
+      // this.camera.quaternion.copy(somila.quaternion);
 
-    this.scene.add(somila);
-    let aspectRatio = this.canvas.clientWidth / this.canvas.clientHeight;
-    this.camera = new THREE.PerspectiveCamera(1, aspectRatio, 1, 1000);
-    this.camera.position.z = 400;
+      this.scene.add(somila);
+      let aspectRatio = this.canvas.clientWidth / this.canvas.clientHeight;
+      this.camera = new THREE.PerspectiveCamera(1, aspectRatio, 1, 1000);
+      this.camera.position.z = 400;
 
-    // start render loop;
-    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas });
-    this.renderer.setPixelRatio(devicePixelRatio);
-    this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+      // start render loop;
+      this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas });
+      this.renderer.setPixelRatio(devicePixelRatio);
+      this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
 
-    let comp: AppComponent = this;
-    let x = 0;
-    (function render() {
-      requestAnimationFrame(render); // recursive loop
-      somila.children[0].position.set(-trnvec.x, -trnvec.y, -trnvec.z);
-      let h = new THREE.Quaternion(
-        comp.rol==true?comp.Rmpudata.Qy:-comp.Lmpudata.Qx,
-         comp.rol==true ?comp.Rmpudata.Qz:comp.Lmpudata.Qz,
-         comp.rol==true ?comp.Rmpudata.Qx:comp.Lmpudata.Qy,
-         comp.rol==true ?comp.Rmpudata.Qw:comp.Lmpudata.Qw
-      );
-      // let h = new THREE.Quaternion(comp.mpudata.Qx,comp.mpudata.Qz,-comp.mpudata.Qy,comp.mpudata.Qw);
-      h = h.normalize();
-      somila.setRotationFromQuaternion(h);
-      // somila.rotateX(0.01)
-      // somila.rotateY(-0.01)
-      // somila.rotateZ(0.02);
-      comp.renderer.render(comp.scene, comp.camera);
-    })();
+      let comp: AppComponent = this;
+      let x = 0;
+      (function render() {
+        requestAnimationFrame(render); // recursive loop
+        somila.children[0].position.set(-trnvec.x, -trnvec.y, -trnvec.z);
+        let h = new THREE.Quaternion(
+          // comp.rol==true?comp.Rmpudata.Qy:-comp.Lmpudata.Qx,
+          //  comp.rol==true ?comp.Rmpudata.Qz:comp.Lmpudata.Qz,
+          //  comp.rol==true ?comp.Rmpudata.Qx:comp.Lmpudata.Qy,
+          //  comp.rol==true ?comp.Rmpudata.Qw:comp.Lmpudata.Qw
+          comp.Lmpudata.Qy,
+          comp.Lmpudata.Qz,
+          comp.Lmpudata.Qx,
+          comp.Lmpudata.Qw
+        );
+        // let h = new THREE.Quaternion(comp.mpudata.Qx,comp.mpudata.Qz,-comp.mpudata.Qy,comp.mpudata.Qw);
+        h = h.normalize();
+        somila.setRotationFromQuaternion(h);
+        // somila.rotateX(0.01)
+        // somila.rotateY(-0.01)
+        // somila.rotateZ(0.02);
+        comp.renderer.render(comp.scene, comp.camera);
+      })();
+    }
+    if(this.tab==2){
+      const ctx = this.pcanvas.getContext('2d');
+      if(ctx==null){
+        console.log("Context is Null!!!!");
+        
+        return;
+      }
+
+      setInterval(()=>{
+        const imgData = ctx.createImageData(this.pcanvas.clientWidth,this.pcanvas.clientHeight);
+          for (let i = 0; i < imgData.data.length; i += 4) {
+            let x=0;
+            let y=0;
+            x =  Math.floor((i/4)/this.pcanvas.clientWidth);
+            y = (i/4)%this.pcanvas.clientWidth;
+           
+            if(255/Math.pow(Math.sqrt(Math.pow(x-100,2)+Math.pow(y-100,2)),2) >=0.05){
+              imgData.data[i+0] = 2000/Math.pow(Math.sqrt(Math.pow(x-100,2)+Math.pow(y-100,2)),2);
+              imgData.data[i+1] = 0;
+              imgData.data[i+2] = 0;
+              imgData.data[i+3] = 255;
+            }
+            else{
+              imgData.data[i+0] = 2000/Math.pow(Math.sqrt(Math.pow(x-100,2)+Math.pow(y-100,2)),2);
+              imgData.data[i+1] = 0;
+              imgData.data[i+2] = 0;
+              imgData.data[i+3] = 255;
+
+            }
+
+          }
+          ctx.putImageData(imgData, 0, 0);   
+      },20);
+    }
   }
 
   constructor(){//private MqttSrv: MqttService) {
@@ -250,40 +296,42 @@ export class AppComponent implements OnDestroy, AfterViewInit {
           //     );
           //   },
           // });
-        
-          PubSub.subscribe('InsoleR-0x5c1a7ec1').subscribe({
-            next: (data) => {
-              let mobj:any = (data.value as any).MPU;
-              let tobj:any = (data.value as any).Timestamp;
-              let pobj:any = (data.value as any).PSR;
+        let h = 0;
+          // PubSub.subscribe('InsoleR-0x5c1a7ec1').subscribe({
+          //   next: (data) => {
+          //     let mobj:any = (data.value as any).MPU;
+          //     let tobj:any = (data.value as any).Timestamp;
+          //     let pobj:any = (data.value as any).PSR;
               
-              if(mobj === undefined && pobj == undefined) {
-                console.log(
-                  'Message received on InsoleR-0x5c1a7ec1:',
-                  JSON.stringify(data.value)
-                  );
-                  return;
-                }
-                if (this.count) {
-                  this.counts++
-                  return;
-                }
-              if(tobj!==undefined)
-                tobj;
-              if(mobj!==undefined){
-                this.Rmpudata=mobj;
-              }
-              if(pobj!==undefined){
-                this.Rprsdata = pobj;
-              }
-            },
-            error: (error) => {
-              console.error(
-                'Error subscribing to InsoleR-PSR-0x5c1a7ec1:',
-                error
-              );
-            },
-          });
+          //     if(mobj === undefined && pobj == undefined) {
+          //       console.log(
+          //         'Message received on InsoleR-0x5c1a7ec1:',
+          //         JSON.stringify(data.value)
+          //         );
+          //         return;
+          //       }
+          //       if (this.count) {
+          //         this.counts++
+          //         return;
+          //       }
+          //     if(tobj!==undefined)
+          //       tobj;
+          //     if(mobj!==undefined){
+          //       // this.Lmpudata=this.Rmpudata;
+          //       this.Rmpudata=mobj;
+          //     }
+          //     if(pobj!==undefined){
+          //       this.Rprsdata = pobj;
+          //     }
+          //   },
+          //   error: (error) => {
+          //     console.error(
+          //       'Error subscribing to InsoleR-PSR-0x5c1a7ec1:',
+          //       error
+          //     );
+          //   },
+          // });
+
           PubSub.subscribe('InsoleL-0x5c1a7ec1').subscribe({
             next: (data) => {
               let mobj:any = (data.value as any).MPU;
@@ -304,6 +352,7 @@ export class AppComponent implements OnDestroy, AfterViewInit {
               if(tobj!==undefined)
                 tobj;
               if(mobj!==undefined){
+                this.Rmpudata=this.Lmpudata;
                 this.Lmpudata=mobj;
               }
               if(pobj!==undefined){
@@ -326,7 +375,7 @@ export class AppComponent implements OnDestroy, AfterViewInit {
   set_tab(i: number) {
     this.tab = i;
     localStorage.setItem('tab', i.toString());
-    if(i==1){
+    if(i==1||i==2){
       this.ngAfterViewInit();
     }
   }

@@ -218,3 +218,8 @@
   width: calc(70vw - 40px);
   overflow: hidden;
 }
+
+#prscanvas {
+  height:95%;
+  width:100%;
+}
