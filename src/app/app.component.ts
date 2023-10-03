@@ -26,7 +26,7 @@ export class AppComponent implements OnDestroy, AfterViewInit {
   name: string = '';
   text: string = '';
   tab: number = 0;
-  rol:boolean = true;
+  rol: boolean = true;
   list: { user: string; msg: string }[] = new Array(0); //[{user:"Me",msg:"Hello ----------------------------------- MQTT"},{user:"Not Me",msg:"hello ------------------------------------------- there"}];
   Rmpudata: {
     Sx: number;
@@ -37,8 +37,8 @@ export class AppComponent implements OnDestroy, AfterViewInit {
     Qz: number;
     Qw: number;
   } = { Sx: 0, Sy: 0, Sz: 0, Qx: 0, Qy: 0, Qz: 0, Qw: 0 };
-  Rprsdata: number[] = [] ;
- 
+  Rprsdata: number[] = [];
+
   Lmpudata: {
     Sx: number;
     Sy: number;
@@ -48,7 +48,7 @@ export class AppComponent implements OnDestroy, AfterViewInit {
     Qz: number;
     Qw: number;
   } = { Sx: 0, Sy: 0, Sz: 0, Qx: 0, Qy: 0, Qz: 0, Qw: 0 };
-  Lprsdata: number[] = [] ;
+  Lprsdata: number[] = [];
   obs_chat!: Subscription;
   obs_sensors!: Subscription;
   count: boolean = false;
@@ -69,8 +69,7 @@ export class AppComponent implements OnDestroy, AfterViewInit {
   scene!: THREE.Scene;
 
   async ngAfterViewInit() {
-    
-    if(this.tab==1){
+    if (this.tab == 1) {
       this.scene = new THREE.Scene();
       this.scene.background = new THREE.Color(0x404040);
 
@@ -122,14 +121,14 @@ export class AppComponent implements OnDestroy, AfterViewInit {
         requestAnimationFrame(render); // recursive loop
         somila.children[0].position.set(-trnvec.x, -trnvec.y, -trnvec.z);
         let h = new THREE.Quaternion(
-          // comp.rol==true?comp.Rmpudata.Qy:-comp.Lmpudata.Qx,
-          //  comp.rol==true ?comp.Rmpudata.Qz:comp.Lmpudata.Qz,
-          //  comp.rol==true ?comp.Rmpudata.Qx:comp.Lmpudata.Qy,
-          //  comp.rol==true ?comp.Rmpudata.Qw:comp.Lmpudata.Qw
-          comp.Lmpudata.Qy,
-          comp.Lmpudata.Qz,
-          comp.Lmpudata.Qx,
-          comp.Lmpudata.Qw
+          comp.rol == true ? -comp.Rmpudata.Qy : -comp.Lmpudata.Qy,
+          comp.rol == true ? comp.Rmpudata.Qz : comp.Lmpudata.Qz,
+          comp.rol == true ? -comp.Rmpudata.Qx : -comp.Lmpudata.Qx,
+          comp.rol == true ? comp.Rmpudata.Qw : comp.Lmpudata.Qw
+          // comp.Lmpudata.Qy,
+          // comp.Lmpudata.Qz,
+          // comp.Lmpudata.Qx,
+          // comp.Lmpudata.Qw
         );
         // let h = new THREE.Quaternion(comp.mpudata.Qx,comp.mpudata.Qz,-comp.mpudata.Qy,comp.mpudata.Qw);
         h = h.normalize();
@@ -140,43 +139,61 @@ export class AppComponent implements OnDestroy, AfterViewInit {
         comp.renderer.render(comp.scene, comp.camera);
       })();
     }
-    if(this.tab==2){
+    if (this.tab == 2) {
       const ctx = this.pcanvas.getContext('2d');
-      if(ctx==null){
-        console.log("Context is Null!!!!");
-        
+      if (ctx == null) {
+        console.log('Context is Null!!!!');
+
         return;
       }
 
-      setInterval(()=>{
-        const imgData = ctx.createImageData(this.pcanvas.clientWidth,this.pcanvas.clientHeight);
-          for (let i = 0; i < imgData.data.length; i += 4) {
-            let x=0;
-            let y=0;
-            x =  Math.floor((i/4)/this.pcanvas.clientWidth);
-            y = (i/4)%this.pcanvas.clientWidth;
-           
-            if(255/Math.pow(Math.sqrt(Math.pow(x-100,2)+Math.pow(y-100,2)),2) >=0.05){
-              imgData.data[i+0] = 2000/Math.pow(Math.sqrt(Math.pow(x-100,2)+Math.pow(y-100,2)),2);
-              imgData.data[i+1] = 0;
-              imgData.data[i+2] = 0;
-              imgData.data[i+3] = 255;
-            }
-            else{
-              imgData.data[i+0] = 2000/Math.pow(Math.sqrt(Math.pow(x-100,2)+Math.pow(y-100,2)),2);
-              imgData.data[i+1] = 0;
-              imgData.data[i+2] = 0;
-              imgData.data[i+3] = 255;
+      setInterval(() => {
+        const imgData = ctx.createImageData(
+          this.pcanvas.clientWidth,
+          this.pcanvas.clientHeight
+        );
+        for (let i = 0; i < imgData.data.length; i += 4) {
+          let x = 0;
+          let y = 0;
+          x = Math.floor(i / 4 / this.pcanvas.clientWidth);
+          y = (i / 4) % this.pcanvas.clientWidth;
 
-            }
-
+          if (
+            255 /
+              Math.pow(
+                Math.sqrt(Math.pow(x - 100, 2) + Math.pow(y - 100, 2)),
+                2
+              ) >=
+            0.05
+          ) {
+            imgData.data[i + 0] =
+              2000 /
+              Math.pow(
+                Math.sqrt(Math.pow(x - 100, 2) + Math.pow(y - 100, 2)),
+                2
+              );
+            imgData.data[i + 1] = 0;
+            imgData.data[i + 2] = 0;
+            imgData.data[i + 3] = 255;
+          } else {
+            imgData.data[i + 0] =
+              2000 /
+              Math.pow(
+                Math.sqrt(Math.pow(x - 100, 2) + Math.pow(y - 100, 2)),
+                2
+              );
+            imgData.data[i + 1] = 0;
+            imgData.data[i + 2] = 0;
+            imgData.data[i + 3] = 255;
           }
-          ctx.putImageData(imgData, 0, 0);   
-      },20);
+        }
+        ctx.putImageData(imgData, 0, 0);
+      }, 20);
     }
   }
 
-  constructor(){//private MqttSrv: MqttService) {
+  constructor() {
+    //private MqttSrv: MqttService) {
     this.tab = Number(localStorage.getItem('tab'));
     // console.log("Current MQtt State",MqttSrv.state);
     // this.obs_chat = MqttSrv.observe('ESP32SCIATECH-thisNthat').subscribe(
@@ -249,123 +266,121 @@ export class AppComponent implements OnDestroy, AfterViewInit {
         });
 
         console.log('Subscribing ...');
-          // Now, you can subscribe to AWS IoT
-          // PubSub.subscribe('InsoleR-MPU-0x5c1a7ec1').subscribe({
-          //   next: (data) => {
-          //     let obj: any = data.value;
-          //     if (obj.Type == 'MPU') {
-          //       if (this.count) {
-          //         this.counts++;
-          //         return;
-          //       }
-          //       this.mpudata = obj;
-          //     } else {
-          //       console.log(
-          //         'Message received on InsoleR-MPU-0x5c1a7ec1:',
-          //         JSON.stringify(obj)
-          //       );
-          //     }
-          //   },
-          //   error: (error) => {
-          //     console.error(
-          //       'Error subscribing to InsoleR-MPU-0x5c1a7ec1:',
-          //       error
-          //     );
-          //   },
-          // });
-          //
-          // PubSub.subscribe('InsoleR-PSR-0x5c1a7ec1').subscribe({
-          //   next: (data) => {
-          //     let obj: any = data.value;
-          //     if (obj.Type == 'PRS') {
-          //       if (this.count) {
-          //         return;
-          //       }
-          //       this.prsdata = obj;
-          //     } else {
-          //       console.log(
-          //         'Message received on InsoleR-PSR-0x5c1a7ec1:',
-          //         JSON.stringify(obj)
-          //       );
-          //     }
-          //   },
-          //   error: (error) => {
-          //     console.error(
-          //       'Error subscribing to InsoleR-PSR-0x5c1a7ec1:',
-          //       error
-          //     );
-          //   },
-          // });
+        // Now, you can subscribe to AWS IoT
+        // PubSub.subscribe('InsoleR-MPU-0x5c1a7ec1').subscribe({
+        //   next: (data) => {
+        //     let obj: any = data.value;
+        //     if (obj.Type == 'MPU') {
+        //       if (this.count) {
+        //         this.counts++;
+        //         return;
+        //       }
+        //       this.mpudata = obj;
+        //     } else {
+        //       console.log(
+        //         'Message received on InsoleR-MPU-0x5c1a7ec1:',
+        //         JSON.stringify(obj)
+        //       );
+        //     }
+        //   },
+        //   error: (error) => {
+        //     console.error(
+        //       'Error subscribing to InsoleR-MPU-0x5c1a7ec1:',
+        //       error
+        //     );
+        //   },
+        // });
+        //
+        // PubSub.subscribe('InsoleR-PSR-0x5c1a7ec1').subscribe({
+        //   next: (data) => {
+        //     let obj: any = data.value;
+        //     if (obj.Type == 'PRS') {
+        //       if (this.count) {
+        //         return;
+        //       }
+        //       this.prsdata = obj;
+        //     } else {
+        //       console.log(
+        //         'Message received on InsoleR-PSR-0x5c1a7ec1:',
+        //         JSON.stringify(obj)
+        //       );
+        //     }
+        //   },
+        //   error: (error) => {
+        //     console.error(
+        //       'Error subscribing to InsoleR-PSR-0x5c1a7ec1:',
+        //       error
+        //     );
+        //   },
+        // });
         let h = 0;
-          // PubSub.subscribe('InsoleR-0x5c1a7ec1').subscribe({
-          //   next: (data) => {
-          //     let mobj:any = (data.value as any).MPU;
-          //     let tobj:any = (data.value as any).Timestamp;
-          //     let pobj:any = (data.value as any).PSR;
-              
-          //     if(mobj === undefined && pobj == undefined) {
-          //       console.log(
-          //         'Message received on InsoleR-0x5c1a7ec1:',
-          //         JSON.stringify(data.value)
-          //         );
-          //         return;
-          //       }
-          //       if (this.count) {
-          //         this.counts++
-          //         return;
-          //       }
-          //     if(tobj!==undefined)
-          //       tobj;
-          //     if(mobj!==undefined){
-          //       // this.Lmpudata=this.Rmpudata;
-          //       this.Rmpudata=mobj;
-          //     }
-          //     if(pobj!==undefined){
-          //       this.Rprsdata = pobj;
-          //     }
-          //   },
-          //   error: (error) => {
-          //     console.error(
-          //       'Error subscribing to InsoleR-PSR-0x5c1a7ec1:',
-          //       error
-          //     );
-          //   },
-          // });
+        PubSub.subscribe('InsoleR-0x5c1a7ec1').subscribe({
+          next: (data) => {
+            let mobj: any = (data.value as any).MPU;
+            let tobj: any = (data.value as any).Timestamp;
+            let pobj: any = (data.value as any).PSR;
 
-          PubSub.subscribe('InsoleL-0x5c1a7ec1').subscribe({
-            next: (data) => {
-              let mobj:any = (data.value as any).MPU;
-              let tobj:any = (data.value as any).Timestamp;
-              let pobj:any = (data.value as any).PSR;
-              
-              if(mobj === undefined && pobj == undefined) {
-                console.log(
-                  'Message received on InsoleR-0x5c1a7ec1:',
-                  JSON.stringify(data.value)
-                  );
-                  return;
-                }
-                if (this.count) {
-                  this.counts++
-                  return;
-                }
-              if(tobj!==undefined)
-                tobj;
-              if(mobj!==undefined){
-                this.Rmpudata=this.Lmpudata;
-                this.Lmpudata=mobj;
-              }
-              if(pobj!==undefined){
-                this.Lprsdata = pobj;
-              }
-            },
-            error: (error) => {
-              console.error(
-                'Error subscribing to InsoleR-PSR-0x5c1a7ec1:',
-                error
+            if (mobj === undefined && pobj == undefined) {
+              console.log(
+                'Message received on InsoleR-0x5c1a7ec1:',
+                JSON.stringify(data.value)
               );
-            },
-          });
+              return;
+            }
+            if (this.count) {
+              this.counts++;
+              return;
+            }
+            if (tobj !== undefined) tobj;
+            if (mobj !== undefined) {
+              // this.Lmpudata=this.Rmpudata;
+              this.Rmpudata = mobj;
+            }
+            if (pobj !== undefined) {
+              this.Rprsdata = pobj;
+            }
+          },
+          error: (error) => {
+            console.error(
+              'Error subscribing to InsoleR-PSR-0x5c1a7ec1:',
+              error
+            );
+          },
+        });
+
+        PubSub.subscribe('InsoleL-0x5c1a7ec1').subscribe({
+          next: (data) => {
+            let mobj: any = (data.value as any).MPU;
+            let tobj: any = (data.value as any).Timestamp;
+            let pobj: any = (data.value as any).PSR;
+
+            if (mobj === undefined && pobj == undefined) {
+              console.log(
+                'Message received on InsoleR-0x5c1a7ec1:',
+                JSON.stringify(data.value)
+              );
+              return;
+            }
+            if (this.count) {
+              this.counts++;
+              return;
+            }
+            if (tobj !== undefined) tobj;
+            if (mobj !== undefined) {
+              // this.Rmpudata=this.Lmpudata;
+              this.Lmpudata = mobj;
+            }
+            if (pobj !== undefined) {
+              this.Lprsdata = pobj;
+            }
+          },
+          error: (error) => {
+            console.error(
+              'Error subscribing to InsoleR-PSR-0x5c1a7ec1:',
+              error
+            );
+          },
+        });
       })
       .catch((error) => {
         console.error('Error getting credentials:', error);
@@ -375,7 +390,7 @@ export class AppComponent implements OnDestroy, AfterViewInit {
   set_tab(i: number) {
     this.tab = i;
     localStorage.setItem('tab', i.toString());
-    if(i==1||i==2){
+    if (i == 1 || i == 2) {
       this.ngAfterViewInit();
     }
   }
