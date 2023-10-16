@@ -222,4 +222,11 @@
 #prscanvas {
   height:95%;
   width:100%;
+  image-rendering: pixelated;
+  filter: blur(15px);
+  clip-path:url(#prscanvas-clip);
+}
+
+#prscanvas-clip{
+  transform: translateX(0px);
 }
