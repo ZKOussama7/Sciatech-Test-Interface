@@ -452,11 +452,11 @@ export class AppComponent implements OnDestroy, AfterViewInit {
           // val += 1/(1+Math.pow(Math.abs(r-(0.16*rmax)) + Math.abs(c - (0.25*cmax)),0.8))
           
           // Right
-          val += vals[5]/(1+Math.pow(Math.abs(r-(0.35*rmax)) + Math.abs(c - (0.57*cmax)),0.5))
-          val += vals[6]/(1+Math.pow(Math.abs(r-(0.45*rmax)) + Math.abs(c - (0.70*cmax)),0.5))
+          val += vals[8]/(1+Math.pow(Math.abs(r-(0.35*rmax)) + Math.abs(c - (0.57*cmax)),0.5))
+          val += vals[9]/(1+Math.pow(Math.abs(r-(0.45*rmax)) + Math.abs(c - (0.70*cmax)),0.5))
           val += vals[7]/(1+Math.pow(Math.abs(r-(0.65*rmax)) + Math.abs(c - (0.67*cmax)),0.5))
-          val += vals[8]/(1+Math.pow(Math.abs(r-(0.87*rmax)) + Math.abs(c - (0.57*cmax)),0.5))
-          val += vals[9]/(1+Math.pow(Math.abs(r-(0.97*rmax)) + Math.abs(c - (0.62*cmax)),0.5))
+          val += vals[6]/(1+Math.pow(Math.abs(r-(0.87*rmax)) + Math.abs(c - (0.57*cmax)),0.5))
+          val += vals[5]/(1+Math.pow(Math.abs(r-(0.97*rmax)) + Math.abs(c - (0.62*cmax)),0.5))
           // val += 1/(1+Math.pow(Math.abs(r-(0.69*rmax)) + Math.abs(c - (0.64*cmax)),0.8))
           // val += 1/(1+Math.pow(Math.abs(r-(0.58*rmax)) + Math.abs(c - (0.825*cmax)),0.8))
           // val += 1/(1+Math.pow(Math.abs(r-(0.41*rmax)) + Math.abs(c - (0.785*cmax)),0.8))
@@ -486,11 +486,11 @@ export class AppComponent implements OnDestroy, AfterViewInit {
           let val=0
           // try:   
               // Left
-          val += vals[0]/(1+Math.pow(Math.abs(r-(0.35*rmax)) + Math.abs(c - (0.25*cmax)),0.5))
-          val += vals[1]/(1+Math.pow(Math.abs(r-(0.45*rmax)) + Math.abs(c - (0.145*cmax)),0.5))
+          val += vals[3]/(1+Math.pow(Math.abs(r-(0.35*rmax)) + Math.abs(c - (0.25*cmax)),0.5))
+          val += vals[4]/(1+Math.pow(Math.abs(r-(0.45*rmax)) + Math.abs(c - (0.145*cmax)),0.5))
           val += vals[2]/(1+Math.pow(Math.abs(r-(0.65*rmax)) + Math.abs(c - (0.180*cmax)),0.5))
-          val += vals[3]/(1+Math.pow(Math.abs(r-(0.87*rmax)) + Math.abs(c - (0.27*cmax)),0.5))
-          val += vals[4]/(1+Math.pow(Math.abs(r-(0.97*rmax)) + Math.abs(c - (0.22*cmax)),0.5))
+          val += vals[1]/(1+Math.pow(Math.abs(r-(0.87*rmax)) + Math.abs(c - (0.27*cmax)),0.5))
+          val += vals[0]/(1+Math.pow(Math.abs(r-(0.97*rmax)) + Math.abs(c - (0.22*cmax)),0.5))
           // val += 0/(1+Math.pow(Math.abs(r-(0.69*rmax)) + Math.abs(c - (0.32*cmax)),0.8))
           // val += 1/(1+Math.pow(Math.abs(r-(0.58*rmax)) + Math.abs(c - (0.135*cmax)),0.8))
           // val += 1/(1+Math.pow(Math.abs(r-(0.41*rmax)) + Math.abs(c - (0.175*cmax)),0.8))
